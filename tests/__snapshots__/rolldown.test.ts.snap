@@ -135,3 +135,41 @@ var wasm_module_default = example_exports;
 export { wasm_module_default as default };
 "
 `;
+
+exports[`rolldown > wasm-module-sync.js 1`] = `
+"// wasm-module-sync.js
+import { loadWasmModule } from "\\0wasm-helpers.js";
+//#region \\0rolldown/runtime.js
+var __defProp = Object.defineProperty;
+var __exportAll = (all, no_symbols) => {
+	let target = {};
+	for (var name in all) __defProp(target, name, {
+		get: all[name],
+		enumerable: true
+	});
+	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
+	return target;
+};
+//#endregion
+//#region tests/fixtures/example.wasm?sync
+var example_exports = /* @__PURE__ */ __exportAll({
+	__data_end: () => __data_end,
+	__heap_base: () => __heap_base,
+	add: () => add,
+	memory: () => memory
+});
+function __wasm_init(imports) {
+	return loadWasmModule(true, null, "AGFzbQEAAAABBwFgAn9/AX8DAgEABAUBcAEBAQUDAQAQBhkDfwFBgIDAAAt/AEGAgMAAC38AQYCAwAALBysEBm1lbW9yeQIAA2FkZAAACl9fZGF0YV9lbmQDAQtfX2hlYXBfYmFzZQMCCgkBBwAgASAAagsANARuYW1lABEQZXhhbXBsZV9yYXcud2FzbQEGAQADYWRkBxIBAA9fX3N0YWNrX3BvaW50ZXIATQlwcm9kdWNlcnMCCGxhbmd1YWdlAQRSdXN0AAxwcm9jZXNzZWQtYnkBBXJ1c3RjHTEuOTEuMSAoZWQ2MWU3ZDdlIDIwMjUtMTEtMDcpAJQBD3RhcmdldF9mZWF0dXJlcwgrC2J1bGstbWVtb3J5Kw9idWxrLW1lbW9yeS1vcHQrFmNhbGwtaW5kaXJlY3Qtb3ZlcmxvbmcrCm11bHRpdmFsdWUrD211dGFibGUtZ2xvYmFscysTbm9udHJhcHBpbmctZnB0b2ludCsPcmVmZXJlbmNlLXR5cGVzKwhzaWduLWV4dA==", imports);
+}
+const instance = __wasm_init({});
+const memory = instance.exports.memory;
+const add = instance.exports.add;
+const __data_end = instance.exports.__data_end;
+const __heap_base = instance.exports.__heap_base;
+//#endregion
+//#region tests/fixtures/wasm-module-sync.js
+var wasm_module_sync_default = example_exports;
+//#endregion
+export { wasm_module_sync_default as default };
+"
+`;
