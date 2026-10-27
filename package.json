@@ -1,7 +1,7 @@
 {
-  "name": "rolldown-plugin-wasm",
+  "name": "@vape-rewrite/rolldown-plugin-wasm",
   "type": "module",
-  "version": "0.3.2",
+  "version": "1.0.0",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
@@ -9,17 +9,16 @@
       "onFail": "download"
     }
   },
-  "description": "Rolldown plugin for WASM.",
-  "author": "Kevin Deng <sxzz@sxzz.moe>",
+  "description": "Fork of `rolldown-plugin-wasm` with `?sync` WASM import support",
+  "author": "Seized and Desisted",
   "license": "MIT",
-  "funding": "https://github.com/sponsors/sxzz",
-  "homepage": "https://github.com/sxzz/rolldown-plugin-wasm#readme",
+  "homepage": "https://github.com/VapeRewrite/rolldown-plugin-wasm#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sxzz/rolldown-plugin-wasm.git"
+    "url": "git+https://github.com/VapeRewrite/rolldown-plugin-wasm.git"
   },
   "bugs": {
-    "url": "https://github.com/sxzz/rolldown-plugin-wasm/issues"
+    "url": "https://github.com/VapeRewrite/rolldown-plugin-wasm/issues"
   },
   "sideEffects": false,
   "exports": {
