@@ -24,4 +24,9 @@ export interface Options {
    * Configures what code is emitted to instantiate the Wasm (both inline and separate)
    */
   targetEnv?: TargetEnv
+  /**
+   * Force `?sync` query parameter for all Wasm files,
+   * Useful for scripts that can't use top-level await (i.e. userscripts).
+   */
+  forceSync?: boolean
 }

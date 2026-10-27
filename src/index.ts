@@ -95,8 +95,8 @@ export function wasm(options: Options = {}): Plugin {
         const buffer = await readFile(file)
 
         const isInit = params.has('init')
-        const isSync = params.has('sync')
         const isUrl = params.has('url')
+        const isSync = params.has('sync') || (!isInit && !isUrl && options.forceSync)
         if (isSync && isUrl) {
           this.error('`sync` and `url` parameters cannot be used together.')
         }
@@ -155,8 +155,9 @@ export function wasm(options: Options = {}): Plugin {
           : null
         let src: string | null
 
-        const isSync = params.has('sync')
+        const isInit = params.has('init')
         const isUrl = params.has('url')
+        const isSync = params.has('sync') || (!isUrl && !isInit && options.forceSync)
         if (isUrl) {
           if (!filepathPlaceholder) {
             this.error(
@@ -175,7 +176,6 @@ export function wasm(options: Options = {}): Plugin {
           src = null
         }
 
-        const isInit = params.has('init')
         let codegen = `import { loadWasmModule } from ${JSON.stringify(HELPERS_ID)}
 ${isInit ? 'export default ' : ''}function __wasm_init(imports) {
   return loadWasmModule(${isSync}, ${filepathPlaceholder}, ${src}, imports)
