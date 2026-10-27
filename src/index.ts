@@ -204,7 +204,7 @@ ${isInit ? 'export default ' : ''}function __wasm_init(imports) {
               }),
             }
           })
-          codegen += `const instance = await __wasm_init(${codegenSimpleObject(importObject)})\n`
+          codegen += `const instance = ${isSync ? "" : "await "}__wasm_init(${codegenSimpleObject(importObject)})\n`
           codegen += exports
             .map((name) => {
               return `export ${name === 'default' ? 'default' : `const ${name} =`} instance.exports.${name}`
