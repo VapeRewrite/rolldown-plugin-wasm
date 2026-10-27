@@ -1,19 +1,19 @@
-import type { TargetEnv } from './options.ts'
+import type { TargetEnv } from "./options.ts";
 
-export const HELPERS_ID: string = '\0wasm-helpers.js'
+export const HELPERS_ID: string = "\0wasm-helpers.js";
 
 const nodeFetchFile = `
 const { readFile } = process.getBuiltinModule('fs/promises')
 return readFile(fileUrl).then((buffer) => instantiate(buffer, imports))
-`
+`;
 
 const nodeDecode = `
 buf = Buffer.from(src, 'base64')
-`
+`;
 
 const browserFetchFile = `
 return instantiate(fetch(fileUrl), imports, true);
-`
+`;
 
 const browserDecode = `
 const raw = globalThis.atob(src)
@@ -22,7 +22,7 @@ buf = new Uint8Array(new ArrayBuffer(len))
 for (let i = 0; i < len; i++) {
   buf[i] = raw.charCodeAt(i)
 }
-`
+`;
 
 const autoModule = `
 let buf = null
@@ -39,7 +39,7 @@ if (isNode) {
 } else {
   ${browserDecode}
 }
-`
+`;
 
 const nodeModule = `
 let buf = null
@@ -48,7 +48,7 @@ if (fileUrl) {
 }
 
 ${nodeDecode}
-`
+`;
 
 const browserModule = `
 let buf = null
@@ -57,7 +57,7 @@ if (fileUrl) {
 }
 
 ${browserDecode}
-`
+`;
 
 const autoInlineModule = `
 let buf = null
@@ -67,21 +67,21 @@ if (isNode) {
 } else {
   ${browserDecode}
 }
-`
+`;
 
 function envModule(env: TargetEnv) {
-  switch (env) {
-    case 'auto':
-      return autoModule
-    case 'auto-inline':
-      return autoInlineModule
-    case 'browser':
-      return browserModule
-    case 'node':
-      return nodeModule
-    default:
-      return null
-  }
+	switch (env) {
+		case "auto":
+			return autoModule;
+		case "auto-inline":
+			return autoInlineModule;
+		case "browser":
+			return browserModule;
+		case "node":
+			return nodeModule;
+		default:
+			return null;
+	}
 }
 
 export const getHelpersModule = (env: TargetEnv) => `
@@ -101,18 +101,18 @@ export function loadWasmModule(sync, fileUrl, src, imports) {
     return instantiate(buf, imports)
   }
 }
-`
+`;
 
-export type SimpleObject = SimpleObjectKeyValue[]
+export type SimpleObject = SimpleObjectKeyValue[];
 export interface SimpleObjectKeyValue {
-  key: string
-  value: string | SimpleObject
+	key: string;
+	value: string | SimpleObject;
 }
 
 export function codegenSimpleObject(obj: SimpleObject): string {
-  return `{ ${obj
-    .map(({ key, value }) => {
-      return `${key}: ${typeof value === 'string' ? value : codegenSimpleObject(value)}`
-    })
-    .join(',\n')} }`
+	return `{ ${obj
+		.map(({ key, value }) => {
+			return `${key}: ${typeof value === "string" ? value : codegenSimpleObject(value)}`;
+		})
+		.join(",\n")} }`;
 }

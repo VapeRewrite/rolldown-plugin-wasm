@@ -4,29 +4,29 @@
  * - `"browser"` omits emitting code that requires node.js builtin modules
  * - `"node"` omits emitting code that requires `fetch`, but requires Node.js 20.16.0 or higher
  */
-export type TargetEnv = 'auto' | 'auto-inline' | 'browser' | 'node'
+export type TargetEnv = "auto" | "auto-inline" | "browser" | "node";
 
 export interface Options {
-  /**
-   * The maximum file size for inline files. If a file exceeds this limit, it will be copied to the destination folder and loaded from a separate file at runtime.
-   * If `maxFileSize` is set to `0` all files will be copied.
-   * Files specified in `sync` to load synchronously are always inlined, regardless of size.
-   *
-   * @default 14 * 1024
-   */
-  maxFileSize?: number
-  /**
-   * String used to rename the emitted Wasm files.
-   * @default '[hash][extname]'
-   */
-  fileName?: string
-  /**
-   * Configures what code is emitted to instantiate the Wasm (both inline and separate)
-   */
-  targetEnv?: TargetEnv
-  /**
-   * Force `?sync` query parameter for all Wasm files,
-   * Useful for scripts that can't use top-level await (i.e. userscripts).
-   */
-  forceSync?: boolean
+	/**
+	 * The maximum file size for inline files. If a file exceeds this limit, it will be copied to the destination folder and loaded from a separate file at runtime.
+	 * If `maxFileSize` is set to `0` all files will be copied.
+	 * Files specified in `sync` to load synchronously are always inlined, regardless of size.
+	 *
+	 * @default 14 * 1024
+	 */
+	maxFileSize?: number;
+	/**
+	 * String used to rename the emitted Wasm files.
+	 * @default '[hash][extname]'
+	 */
+	fileName?: string;
+	/**
+	 * Configures what code is emitted to instantiate the Wasm (both inline and separate)
+	 */
+	targetEnv?: TargetEnv;
+	/**
+	 * Force `?sync` query parameter for all Wasm files,
+	 * Useful for scripts that can't use top-level await (i.e. userscripts).
+	 */
+	forceSync?: boolean;
 }
