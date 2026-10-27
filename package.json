@@ -1,69 +1,69 @@
 {
-  "name": "@vape-rewrite/rolldown-plugin-wasm",
-  "type": "module",
-  "version": "1.0.1",
-  "devEngines": {
-    "packageManager": {
-      "name": "bun",
-      "version": "1.4.4",
-      "onFail": "error"
-    }
-  },
-  "description": "Fork of `rolldown-plugin-wasm` with `?sync` WASM import support",
-  "author": "Seized and Desisted",
-  "license": "MIT",
-  "homepage": "https://github.com/VapeRewrite/rolldown-plugin-wasm#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VapeRewrite/rolldown-plugin-wasm.git"
-  },
-  "bugs": {
-    "url": "https://github.com/VapeRewrite/rolldown-plugin-wasm/issues"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./package.json": "./package.json",
-    "./types": "./types.d.ts"
-  },
-  "types": "./dist/index.d.mts",
-  "files": [
-    "dist",
-    "types.d.ts"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "engines": {
-    "node": "^22.18.0 || >=24.0.0"
-  },
-  "scripts": {
-    "lint": "eslint --cache .",
-    "lint:fix": "pnpm run lint --fix",
-    "build": "tsdown",
-    "build:examples": "bash ./examples/build.sh",
-    "dev": "tsdown --watch",
-    "test": "NODE_OPTIONS=--experimental-vm-modules vitest --typecheck",
-    "typecheck": "tsgo --noEmit",
-    "format": "prettier --cache --write .",
-    "release": "bumpp",
-    "prepublishOnly": "pnpm run build"
-  },
-  "peerDependencies": {
-    "rolldown": "^1.0.0"
-  },
-  "devDependencies": {
-    "@sxzz/test-utils": "^0.5.20",
-    "@types/bun": "^1.4.4",
-    "bumpp": "^12.3.0",
-    "oxfmt": "^0.75.0",
-    "oxlint": "^1.90.0",
-    "rolldown": "1.2.15",
-    "test-pkg": "./examples/pkg",
-    "tsdown": "^0.23.2",
-    "tsdown-preset-sxzz": "^0.7.1",
-    "typescript": "^7.0.2",
-    "vitest": "^5.0.5",
-    "wasm-pack": "^0.15.0"
-  }
+	"name": "@vape-rewrite/rolldown-plugin-wasm",
+	"version": "1.0.1",
+	"description": "Fork of `rolldown-plugin-wasm` with `?sync` WASM import support",
+	"homepage": "https://github.com/VapeRewrite/rolldown-plugin-wasm#readme",
+	"bugs": {
+		"url": "https://github.com/VapeRewrite/rolldown-plugin-wasm/issues"
+	},
+	"license": "MIT",
+	"author": "Seized and Desisted",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/VapeRewrite/rolldown-plugin-wasm.git"
+	},
+	"files": [
+		"dist",
+		"types.d.ts"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"types": "./dist/index.d.mts",
+	"exports": {
+		".": "./dist/index.mjs",
+		"./package.json": "./package.json",
+		"./types": "./types.d.ts"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"lint": "eslint --cache .",
+		"lint:fix": "pnpm run lint --fix",
+		"build": "tsdown",
+		"build:examples": "bash ./examples/build.sh",
+		"dev": "tsdown --watch",
+		"test": "NODE_OPTIONS=--experimental-vm-modules vitest --typecheck",
+		"typecheck": "tsgo --noEmit",
+		"format": "prettier --cache --write .",
+		"release": "bumpp",
+		"prepublishOnly": "pnpm run build"
+	},
+	"devDependencies": {
+		"@sxzz/test-utils": "^0.5.20",
+		"@types/bun": "^1.4.4",
+		"bumpp": "^12.3.0",
+		"oxfmt": "^0.75.0",
+		"oxlint": "^1.90.0",
+		"rolldown": "1.2.15",
+		"test-pkg": "./examples/pkg",
+		"tsdown": "^0.23.2",
+		"tsdown-preset-sxzz": "^0.7.1",
+		"typescript": "^7.0.2",
+		"vitest": "^5.0.5",
+		"wasm-pack": "^0.15.0"
+	},
+	"peerDependencies": {
+		"rolldown": "^1.0.0"
+	},
+	"devEngines": {
+		"packageManager": {
+			"name": "bun",
+			"version": "1.4.4",
+			"onFail": "error"
+		}
+	},
+	"engines": {
+		"node": "^22.18.0 || >=24.0.0"
+	}
 }

@@ -1,12 +1,12 @@
-import { nodeLib } from 'tsdown-preset-sxzz'
+import { nodeLib } from "tsdown-preset-sxzz";
 
 export default nodeLib(
-  {},
-  {
-    exports: {
-      customExports: {
-        './types': './types.d.ts',
-      },
-    },
-  },
-)
+	{},
+	{
+		exports: {
+			customExports: {
+				"./types": "./types.d.ts",
+			},
+		},
+	},
+);

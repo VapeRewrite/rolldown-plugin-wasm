@@ -1,132 +1,119 @@
 /// <reference lib="dom" />
 
-import { Buffer } from 'node:buffer'
-import { readFile } from 'node:fs/promises'
-import path from 'node:path'
-import process from 'node:process'
-import { createContext, SourceTextModule } from 'node:vm'
-import { rolldownBuild, testFixtures } from '@sxzz/test-utils'
-import { describe, expect, test } from 'vitest'
-import { wasm } from '../src/index.ts'
+import { Buffer } from "node:buffer";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import process from "node:process";
+import { createContext, SourceTextModule } from "node:vm";
+import { rolldownBuild, testFixtures } from "@sxzz/test-utils";
+import { describe, expect, test } from "vitest";
+import { wasm } from "../src/index.ts";
 
 const pkgWasm = readFile(
-  path.resolve(import.meta.dirname, '../examples/pkg/wasm_example_pkg_bg.wasm'),
-)
-const exampleWasm = readFile(
-  path.resolve(import.meta.dirname, 'fixtures/example.wasm'),
-)
-const atob = (str: string) => Buffer.from(str, 'base64').toString('binary')
+	path.resolve(import.meta.dirname, "../examples/pkg/wasm_example_pkg_bg.wasm"),
+);
+const exampleWasm = readFile(path.resolve(import.meta.dirname, "fixtures/example.wasm"));
+const atob = (str: string) => Buffer.from(str, "base64").toString("binary");
 
-describe('e2e', () => {
-  describe.each(['node', 'browser'] as const)(
-    'platform: %s',
-    async (platform) => {
-      await testFixtures(
-        '*.js',
-        async (args, id) => {
-          await e2e(id, platform, 0)
-        },
-        {
-          cwd: path.resolve(import.meta.dirname, 'fixtures'),
-          promise: true,
-          snapshot: false,
-        },
-      )
+describe("e2e", () => {
+	describe.each(["node", "browser"] as const)("platform: %s", async (platform) => {
+		await testFixtures(
+			"*.js",
+			async (args, id) => {
+				await e2e(id, platform, 0);
+			},
+			{
+				cwd: path.resolve(import.meta.dirname, "fixtures"),
+				promise: true,
+				snapshot: false,
+			},
+		);
 
-      test('maxFileSize = 0', async () => {
-        await e2e(
-          path.resolve(import.meta.dirname, 'fixtures/init.js'),
-          platform,
-          0,
-        )
-      })
-    },
-  )
-})
+		test("maxFileSize = 0", async () => {
+			await e2e(path.resolve(import.meta.dirname, "fixtures/init.js"), platform, 0);
+		});
+	});
+});
 
-async function e2e(
-  entry: string,
-  platform: 'node' | 'browser',
-  maxFileSize?: number,
-) {
-  const init = entry.includes('init')
-  const sync = entry.includes('sync')
-  const url = entry.includes('url')
-  const wasmBindgen = entry.includes('wasm-bindgen')
+async function e2e(entry: string, platform: "node" | "browser", maxFileSize?: number) {
+	const init = entry.includes("init");
+	const sync = entry.includes("sync");
+	const url = entry.includes("url");
+	const wasmBindgen = entry.includes("wasm-bindgen");
 
-  const { chunks } = await rolldownBuild(
-    entry,
-    [
-      wasm({
-        maxFileSize,
-        fileName: 'assets/[hash][extname]',
-      }),
-    ],
-    {
-      platform,
-      treeshake: {
-        moduleSideEffects: false,
-      },
-    },
-  )
+	const { chunks } = await rolldownBuild(
+		entry,
+		[
+			wasm({
+				maxFileSize,
+				fileName: "assets/[hash][extname]",
+			}),
+		],
+		{
+			platform,
+			treeshake: {
+				moduleSideEffects: false,
+			},
+		},
+	);
 
-  const code = chunks[0].code
-  const buf = wasmBindgen ? pkgWasm : exampleWasm
+	const code = chunks[0].code;
+	const buf = wasmBindgen ? pkgWasm : exampleWasm;
 
-  const mod = new SourceTextModule(code, {
-    context: createContext({
-      URL,
-      console,
-      Buffer,
-      atob: platform === 'browser' ? atob : undefined,
-      fetch:
-        platform === 'browser' && maxFileSize === 0
-          ? async () => {
-              return new Response(await buf, {
-                headers: { 'Content-Type': 'application/wasm' },
-              })
-            }
-          : undefined,
-      process:
-        platform === 'node'
-          ? {
-              getBuiltinModule: (name: string) => {
-                if (name === 'buffer') return { Buffer }
-                else if (name === 'fs/promises') {
-                  return { readFile: () => buf }
-                }
+	const mod = new SourceTextModule(code, {
+		context: createContext({
+			URL,
+			console,
+			Buffer,
+			atob: platform === "browser" ? atob : undefined,
+			fetch:
+				platform === "browser" && maxFileSize === 0
+					? async () => {
+							return new Response(await buf, {
+								headers: { "Content-Type": "application/wasm" },
+							});
+						}
+					: undefined,
+			process:
+				platform === "node"
+					? {
+							getBuiltinModule: (name: string) => {
+								if (name === "buffer") return { Buffer };
+								else if (name === "fs/promises") {
+									return { readFile: () => buf };
+								}
 
-                throw new Error(`Unsupported module: ${name}`)
-              },
-            }
-          : undefined,
-    }),
-    initializeImportMeta(meta) {
-      meta.dirname = process.cwd()
-      meta.url = new URL('..', import.meta.url).href
-    },
-  })
-  await mod.link((spec) => {
-    throw new Error(`No imports expected: ${spec}`)
-  })
-  await mod.evaluate()
-  const exported = (mod.namespace as any).default
+								throw new Error(`Unsupported module: ${name}`);
+							},
+						}
+					: undefined,
+		}),
+		initializeImportMeta(meta) {
+			meta.dirname = process.cwd();
+			meta.url = new URL("..", import.meta.url).href;
+		},
+	});
+	await mod.link((spec) => {
+		throw new Error(`No imports expected: ${spec}`);
+	});
+	await mod.evaluate();
+	const exported = (mod.namespace as any).default;
 
-  if (url) {
-    expect(exported).a('string')
-    expect(exported).match(/assets[/\\]\w{16}\.wasm$/)
-  } else if (init) {
-    const ret = exported()
-    if (sync) {
-      expect(ret).a('WebAssembly.Instance')
-    } else {
-      await expect(ret).resolves.a('WebAssembly.Instance')
-    }
+	if (url) {
+		expect(exported).a("string");
+		expect(exported).match(/assets[/\\]\w{16}\.wasm$/);
+	} else if (init) {
+		const ret = exported();
+		if (sync) {
+			expect(ret).a("WebAssembly.Instance");
+		} else {
+			await expect(ret).resolves.a("WebAssembly.Instance");
+		}
 
-    const instance: WebAssembly.Instance = await ret
-    expect((instance.exports as any).add(1, 2)).toBe(3)
-  } else {
-    expect(Object.keys(exported)).length.greaterThan(0)
-    expect(exported.add(1, 2)).toBe(3)
-  }
+		const instance: WebAssembly.Instance = await ret;
+		expect((instance.exports as any).add(1, 2)).toBe(3);
+	} else {
+		expect(Object.keys(exported)).length.greaterThan(0);
+		expect(exported.add(1, 2)).toBe(3);
+	}
 }
